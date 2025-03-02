@@ -20,6 +20,7 @@ Content-Type: application/json
 ###
 POST http://localhost:5000/tasks/add
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoic2hhbnRhbnVndXB0YTA0MTJAZ21haWwuY29tIiwiaWF0IjoxNzQwOTM5NjQ5LCJleHAiOjE3NDA5NDMyNDl9.jScmrbEQc9yIxDJEtA83SQk5ig3Up1qSJdu5bzL9wfQ
 
 {
     "title": "test",
@@ -30,6 +31,7 @@ Content-Type: application/json
 ###
 POST http://localhost:5000/tasks/update
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoic2hhbnRhbnVndXB0YTA0MTJAZ21haWwuY29tIiwiaWF0IjoxNzQwOTM5NjQ5LCJleHAiOjE3NDA5NDMyNDl9.jScmrbEQc9yIxDJEtA83SQk5ig3Up1qSJdu5bzL9wfQ
 
 {
     "title": "test",
@@ -38,10 +40,12 @@ Content-Type: application/json
 
 ###
 GET  http://localhost:5000/tasks/fetch
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoic2hhbnRhbnVndXB0YTA0MTJAZ21haWwuY29tIiwiaWF0IjoxNzQwOTM5NjQ5LCJleHAiOjE3NDA5NDMyNDl9.jScmrbEQc9yIxDJEtA83SQk5ig3Up1qSJdu5bzL9wfQ
 
 ###
 DELETE http://localhost:5000/tasks/delete
 Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoic2hhbnRhbnVndXB0YTA0MTJAZ21haWwuY29tIiwiaWF0IjoxNzQwOTM5NjQ5LCJleHAiOjE3NDA5NDMyNDl9.jScmrbEQc9yIxDJEtA83SQk5ig3Up1qSJdu5bzL9wfQ
 
 {
     "title": "test"
