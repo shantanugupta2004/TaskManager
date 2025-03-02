@@ -3,8 +3,8 @@ POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-    "email": "1@2.com",
-    "password": "admin"
+    "email": "shantanugupta0412@gmail.com",
+    "password": "123456"
 }
 
 ###
@@ -15,4 +15,34 @@ Content-Type: application/json
     "name": "test",
     "email": "1@2.com",
     "password": "admin"
+}
+
+###
+POST http://localhost:5000/tasks/add
+Content-Type: application/json
+
+{
+    "title": "test",
+    "description": "Testing the API endpint",
+    "name": "Shantanu"
+}
+
+###
+POST http://localhost:5000/tasks/update
+Content-Type: application/json
+
+{
+    "title": "test",
+    "status": "In Progress"
+}
+
+###
+GET  http://localhost:5000/tasks/fetch
+
+###
+DELETE http://localhost:5000/tasks/delete
+Content-Type: application/json
+
+{
+    "title": "test"
 }

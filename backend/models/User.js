@@ -18,3 +18,13 @@ export const getUser = async (email) => {
         console.log(error);
     }
 };
+
+export const getUserbyName = async (Name) => {
+    try {
+        const result = await pool.query("SELECT id FROM users WHERE name = $1", [Name]);
+        return result.rows[0]?.id;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}; 
