@@ -1,4 +1,4 @@
-import { CreateUser, getUser } from "../models/User.js";
+import { CreateUser, getUser, updatePass } from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -29,5 +29,17 @@ export const login = async (req, res) => {
     } catch (error) {
         console.error("Login failed", error);
         res.status(500).json({error: "Login failed"});
+    }
+};
+
+export const forgotPass = async (req, res) => {
+    const {email, password} = req.body;
+    try {
+        const hashedPass = await bcrypt.hash(password, 10);
+        const userId = await updatePass(email, hashedPass);
+        res.json({userId});
+    } catch (error) {
+        console.error("Password could not be updated", error);
+        res.status(500).json({error: "Password could not be updated"});
     }
 };
