@@ -24,6 +24,15 @@ export const getTaskbyTitle = async (title) => {
     }
 };
 
+export const getUserid = async (title) => {
+    try {
+        const result = await pool.query('SELECT user_id FROM tasks WHERE title = $1', [title]);
+        return result.rows[0]?.user_id;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 export const updateStatus = async (title, status) => {
     try {
         const taskId = await getTaskbyTitle(title);
