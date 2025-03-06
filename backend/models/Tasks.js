@@ -64,4 +64,13 @@ export const deleteTasks = async (title) => {
 export const fetchTasks = async () => {
     const result = await pool.query("SELECT * FROM tasks ORDER BY id ASC");
     return result.rows;
-}
+};
+
+export const fetchTasksbyPriority = async () => {
+    try {
+        const result = await pool.query("SELECT t.title, t.status, t.description, p.priority FROM tasks t JOIN priorities p on t.id = p.task_id ORDER BY CASE WHEN p.priority = 'High' THEN 1 WHEN p.priority = 'Medium' THEN 2 WHEN p.priority = 'Low' THEN 3 END;");
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};

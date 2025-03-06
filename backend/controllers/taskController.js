@@ -1,4 +1,4 @@
-import { AddTask, updateStatus, deleteTasks, fetchTasks, getTaskbyTitle } from "../models/Tasks.js";
+import { AddTask, updateStatus, deleteTasks, fetchTasks, getTaskbyTitle, fetchTasksbyPriority } from "../models/Tasks.js";
 import { addPriority, updatePriority } from "../models/Priorities.js";
 
 export const add = async (req, res) => {
@@ -66,6 +66,16 @@ export const getTasks = async (req, res) => {
     try {
         const tasks = await fetchTasks();
         res.json(tasks)
+    } catch (error) {
+        console.log("Tasks could not be fetched", error)
+        res.status(500).json({error: "Failed to retrieve tasks"});
+    }
+};
+
+export const getTasksbyPriority = async (req, res) => {
+    try {
+        const tasks = await fetchTasksbyPriority();
+        res.json({tasks});
     } catch (error) {
         console.log("Tasks could not be fetched", error)
         res.status(500).json({error: "Failed to retrieve tasks"});
