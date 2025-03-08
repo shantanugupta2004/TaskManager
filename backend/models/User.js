@@ -52,3 +52,13 @@ export const updatePass = async (email, password) => {
         console.log(error);
     }
 };
+
+export const getNamebyemail = async (email) => {
+    try {
+        const result = await pool.query("SELECT name FROM users WHERE email = $1", [email]);
+        return result.rows[0]?.name || null;
+    } catch (error) {
+        console.log(error);
+    }
+
+};

@@ -1,4 +1,4 @@
-import { CreateUser, getUser, updatePass } from "../models/User.js";
+import { CreateUser, getUser, updatePass, getNamebyemail } from "../models/User.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -25,7 +25,8 @@ export const login = async (req, res) => {
             return res.status(401).json({message: "Invalid credentials"});
         }
         const token = jwt.sign({userId: user.id, email: user.email}, process.env.JWT_SECRET, {expiresIn: "1h"});
-        res.json({token, email: user.email});
+        const name = await getNamebyemail(email);
+        res.json({token, email: user.email, name: name});
     } catch (error) {
         console.error("Login failed", error);
         res.status(500).json({error: "Login failed"});

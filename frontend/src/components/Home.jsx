@@ -11,8 +11,8 @@ const Home = () => {
   const [newTask, setNewTask] = useState({
     title: '',
     description: '',
-    name: localStorage.getItem('username') || 'User', // Get username from localStorage if available
-    priority: 'medium'
+    name: localStorage.getItem('name') || 'User', // Get username from localStorage if available
+    priority: 'High'
   });
   
   // Filter states
@@ -28,7 +28,7 @@ const Home = () => {
     total: 0,
     completed: 0,
     inProgress: 0,
-    todo: 0
+    pending: 0
   });
   
   // Fetch tasks on component mount
@@ -44,15 +44,15 @@ const Home = () => {
   // Calculate task statistics whenever tasks change
   useEffect(() => {
     const total = tasks.length;
-    const completed = tasks.filter(task => task.status === 'completed').length;
-    const inProgress = tasks.filter(task => task.status === 'in-progress').length;
-    const todo = tasks.filter(task => task.status === 'todo').length;
+    const completed = tasks.filter(task => task.status === 'Completed').length;
+    const inProgress = tasks.filter(task => task.status === 'In Progress').length;
+    const pending = tasks.filter(task => task.status === 'Pending').length;
     
     setTaskStats({
       total,
       completed,
       inProgress,
-      todo
+      pending
     });
   }, [tasks]);
   
@@ -60,26 +60,21 @@ const Home = () => {
   const fetchTasks = async () => {
     setLoading(true);
     try {
-      let response;
-      if (priorityFilter === 'all') {
-        response = await API.get('/tasks/fetch');
-      } else {
-        response = await API.get('/tasks/fetchP');
+        const response = await API.get('/tasks/fetchP');
+
         // Assuming fetchP returns { tasks: [...] }
-        if (response.data.tasks) {
-          response.data = response.data.tasks;
-        }
-      }
-      
-      setTasks(response.data);
-      setError(null);
+        const tasks = response.data.tasks ? response.data.tasks : response.data;
+
+        setTasks(tasks);
+        setError(null);
     } catch (err) {
-      console.error('Failed to fetch tasks:', err);
-      setError('Failed to load tasks. Please try again.');
+        console.error('Failed to fetch tasks:', err);
+        setError('Failed to load tasks. Please try again.');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
+
   
   // Apply filters to the tasks
   const filterTasks = () => {
@@ -90,8 +85,9 @@ const Home = () => {
       filtered = filtered.filter(task => task.status === statusFilter);
     }
     
-    // We don't need to filter by priority here since we're fetching
-    // by priority from the API if priorityFilter is not 'all'
+    if (priorityFilter !== 'all') {
+      filtered = filtered.filter(task => task.priority === priorityFilter);
+  }
     
     setFilteredTasks(filtered);
   };
@@ -116,8 +112,8 @@ const Home = () => {
       setNewTask({
         title: '',
         description: '',
-        name: localStorage.getItem('username') || 'User',
-        priority: 'medium'
+        name: localStorage.getItem('name') || 'User',
+        priority: ''
       });
       
       // Refresh task list
@@ -168,8 +164,8 @@ const Home = () => {
     if (!currentTask) return;
     
     const updateData = {
-      title: currentTask.title,
-      priority: e.target.priority.value
+      priority: e.target.priority.value,
+      title: currentTask.title
     };
     
     try {
@@ -201,18 +197,19 @@ const Home = () => {
   // Handle logout
   const handleLogout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    window.location.href = '/login'; // Redirect to login page
+    localStorage.removeItem('email');
+    localStorage.removeItem('name');
+    window.location.href = '/'; // Redirect to login page
   };
   
   // Get appropriate color class for priority badge
   const getPriorityClass = (priority) => {
     switch (priority) {
-      case 'high':
+      case 'High':
         return 'bg-red-100 text-red-800';
-      case 'medium':
+      case 'Medium':
         return 'bg-yellow-100 text-yellow-800';
-      case 'low':
+      case 'Low':
         return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -222,11 +219,11 @@ const Home = () => {
   // Get appropriate color class for status badge
   const getStatusClass = (status) => {
     switch (status) {
-      case 'completed':
+      case 'Completed':
         return 'bg-green-100 text-green-800';
-      case 'in-progress':
+      case 'In Progress':
         return 'bg-blue-100 text-blue-800';
-      case 'todo':
+      case 'Pending':
         return 'bg-yellow-100 text-yellow-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -241,7 +238,7 @@ const Home = () => {
           <div className="text-xl font-bold">TaskFlow</div>
           <div className="flex items-center space-x-4">
             <div className="hidden md:block">
-              Welcome, {localStorage.getItem('username') || 'User'}
+              Welcome, {localStorage.getItem('name') || 'User'}
             </div>
             <button 
               onClick={handleLogout}
@@ -274,9 +271,9 @@ const Home = () => {
                     onChange={(e) => setPriorityFilter(e.target.value)}
                   >
                     <option value="all">All Priorities</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                   </select>
                   <select 
                     className="border rounded-md p-2 text-sm"
@@ -284,9 +281,9 @@ const Home = () => {
                     onChange={(e) => setStatusFilter(e.target.value)}
                   >
                     <option value="all">All Status</option>
-                    <option value="todo">To Do</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="completed">Completed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
                   </select>
                 </div>
               </div>
@@ -378,9 +375,9 @@ const Home = () => {
                     onChange={handleInputChange}
                     className="w-full p-2 border rounded-md"
                   >
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                   </select>
                 </div>
                 <button 
@@ -408,8 +405,8 @@ const Home = () => {
                   <span className="font-bold text-blue-600">{taskStats.inProgress}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">To Do:</span>
-                  <span className="font-bold text-yellow-600">{taskStats.todo}</span>
+                  <span className="text-sm">Pending:</span>
+                  <span className="font-bold text-yellow-600">{taskStats.pending}</span>
                 </div>
               </div>
             </div>
@@ -464,9 +461,9 @@ const Home = () => {
                     defaultValue={currentTask.status}
                     className="flex-1 p-2 border rounded-md"
                   >
-                    <option value="todo">To Do</option>
-                    <option value="in-progress">In Progress</option>
-                    <option value="completed">Completed</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
                   </select>
                   <button 
                     type="submit"
@@ -485,9 +482,9 @@ const Home = () => {
                     defaultValue={currentTask.priority}
                     className="flex-1 p-2 border rounded-md"
                   >
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
                   </select>
                   <button 
                     type="submit"
