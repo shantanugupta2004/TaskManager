@@ -57,4 +57,18 @@ export const deleteMember = async (u_name) => {
     } catch (error) {
         console.log(error);
     }
-}; 
+};
+
+export const getAllProjectMembers = async (title) => {
+    try {
+        const p_id = await getProjectbyTitle(title);
+        if(!p_id){
+            console.log("Project does not exist");
+            return null;
+        }
+        const result = await pool.query("SELECT * FROM project_members WHERE project_id = $1", [p_id]);
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};

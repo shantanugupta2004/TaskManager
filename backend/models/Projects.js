@@ -18,7 +18,7 @@ export const CreateProject = async (title, description, u_name) =>{
 
 export const getProjectbyTitle = async (title) => {
     try {
-        const result = await pool.query("SELECT * FROM projects WHERE title = $1", [title]);
+        const result = await pool.query("SELECT * FROM projects WHERE name = $1", [title]);
         if(!result){
             console.log("Project not found");
             return null;
