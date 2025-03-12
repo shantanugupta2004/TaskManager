@@ -5,7 +5,7 @@ import { getMemberbyName } from "./Project_Members.js";
 export const AddPTask = async (p_title, title, description, t_status, t_priority, u_name) => {
     try {
         const p_id = await getProjectbyTitle(p_title);
-        const u_id = getMemberbyName(u_name);
+        const u_id = await getMemberbyName(u_name);
         if(!p_id || !u_id){
             console.log("Either project or user does not exist");
             return null;
@@ -63,6 +63,20 @@ export const deletePTasks = async (title) => {
         }
         const result = await pool.query("DELETE FROM project_tasks WHERE id = $1 RETURNING *", [t_id]);
         return result.rows[0];
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const fetchPTasks = async (title) => {
+    try {
+        const p_id = await getProjectbyTitle (title);
+        if(!p_id){
+            console.log("Project deos not exist");
+            return null;
+        }
+        const tasks = await pool.query("SELECT * FROM project_tasks WHERE project_id = $1", [p_id]);
+        return tasks.rows;
     } catch (error) {
         console.log(error);
     }
