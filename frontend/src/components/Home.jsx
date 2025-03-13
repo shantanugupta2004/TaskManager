@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import API from '../utils/api';
+import Navbar from './Navbar';
 
 const Home = () => {
   const [tasks, setTasks] = useState([]);
@@ -233,22 +234,7 @@ const Home = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       {/* Navigation Bar */}
-      <nav className="bg-indigo-600 text-white p-4 shadow-md">
-        <div className="container mx-auto flex justify-between items-center">
-          <div className="text-xl font-bold">TaskFlow</div>
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:block">
-              Welcome, {localStorage.getItem('name') || 'User'}
-            </div>
-            <button 
-              onClick={handleLogout}
-              className="bg-white text-indigo-600 px-4 py-2 rounded-md hover:bg-indigo-100 transition"
-            >
-              <i className="fas fa-sign-out-alt mr-2"></i>Logout
-            </button>
-          </div>
-        </div>
-      </nav>
+      <Navbar/>
 
       {/* Main Content */}
       <div className="container mx-auto p-4 md:p-6">

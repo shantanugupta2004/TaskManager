@@ -1,6 +1,6 @@
 import pool from "../config/db.js";
 import { getProjectbyTitle } from "./Projects.js";
-import { getUserbyName } from "./User.js";
+import { getUserbyName, getNamebyID } from "./User.js";
 
 export const addMember = async (p_name, u_name, role) => {
     const p_id = await getProjectbyTitle(p_name);
@@ -68,6 +68,15 @@ export const getAllProjectMembers = async (title) => {
         }
         const result = await pool.query("SELECT * FROM project_members WHERE project_id = $1", [p_id]);
         return result.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+export const getMemberNames = async (u_id) => {
+    try {
+        const result = await getNamebyID(u_id);
+        return result;
     } catch (error) {
         console.log(error);
     }

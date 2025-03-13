@@ -1,4 +1,4 @@
-import { addMember, updateRole, deleteMember, getAllProjectMembers } from "../models/Project_Members.js";
+import { addMember, updateRole, deleteMember, getAllProjectMembers, getMemberNames } from "../models/Project_Members.js";
 
 export const addM = async (req, res) => {
     const {p_name, u_name, role} = req.body;
@@ -44,5 +44,16 @@ export const fetchM = async (req, res) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({error: "Members could not be fetched"});
+    }
+};
+
+export const getNames = async (req, res) => {
+    const {u_id} = req.body;
+    try {
+        const name = await getMemberNames(u_id);
+        res.json({name});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error: "Names could not be fetched"});
     }
 };
